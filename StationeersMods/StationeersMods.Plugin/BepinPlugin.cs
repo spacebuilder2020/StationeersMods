@@ -82,6 +82,8 @@ namespace StationeersMods.Plugin
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
                         var loadPostfix = typeof(WorldManagerPatch).GetMethod("LoadDataFilesAtPathPostfix");
                         harmony.Patch(loadMethod, postfix: new HarmonyMethod(loadPostfix));
+                        
+                        harmony.PatchAll(typeof(StationSaveUtilsPatch));
                     }
                     catch (Exception ex)
                     {

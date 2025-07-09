@@ -7,8 +7,7 @@ namespace StationeersMods.Plugin;
 [HarmonyPatch]
 public class StationSaveUtilsPatch
 {
-    //TODO: Replace with config
-    private const string SavePathOverride = "Stationeers-modded";
+    public static string SavePathOverride = null;
     
     [HarmonyPatch(typeof(StationSaveUtils), nameof(StationSaveUtils.DefaultPath), MethodType.Getter), HarmonyPrefix]
     static bool DefaultPath(ref string __result)
@@ -18,8 +17,7 @@ public class StationSaveUtilsPatch
             return true;
         }
 
-        __result = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "My Games",
-            SavePathOverride);
+        __result = SavePathOverride;
         return false;
     }
 }

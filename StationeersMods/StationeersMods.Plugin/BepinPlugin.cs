@@ -20,6 +20,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using System.IO.Compression;
+using Assets.Scripts;
 
 namespace StationeersMods.Plugin
 {
@@ -82,7 +83,23 @@ namespace StationeersMods.Plugin
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
                         var loadPostfix = typeof(WorldManagerPatch).GetMethod("LoadDataFilesAtPathPostfix");
                         harmony.Patch(loadMethod, postfix: new HarmonyMethod(loadPostfix));
-                        
+
+                        string[] args = Environment.GetCommandLineArgs();
+                        for (int i = 0; i < args.Length; i++)
+                        {
+                            if (args[i] == "-settingspath")
+                            {
+                                string configpath =  args[i + 1];
+                                int lastIndex = configpath.LastIndexOf('/');
+                                if (lastIndex == -1)
+                                {
+                                    lastIndex = configpath.LastIndexOf('\\');
+                                }
+
+                                StationSaveUtilsPatch.SavePathOverride = configpath.Substring(0, lastIndex);
+                                break;
+                            }
+                        }
                         harmony.PatchAll(typeof(StationSaveUtilsPatch));
                     }
                     catch (Exception ex)
